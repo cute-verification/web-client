@@ -7,15 +7,15 @@ import {
 } from "../../../api/requests.js";
 import CvTable from "../../../components/cv-table.vue";
 import {snackbar} from "mdui";
+import IdentificationSourceTable from "../../../components/identification-source-table.vue";
 
 export default {
   name: 'identification-info',
-  components: {CvTable},
+  components: {IdentificationSourceTable, CvTable},
   data() {
     return {
       id: '',
       code: '',
-      identification_sources: [],
       available_restrictions: [],
       expired_restrictions: [],
     }
@@ -27,20 +27,6 @@ export default {
       router.push("/admin/index/identifications")
       return
     }
-
-    identification_info(this.id, (response) => {
-      const success = response["success"]
-      if (!success) {
-        snackbar({ message: '无法获取识别码提供记录' })
-        return
-      }
-      const data = response["data"]
-      const identification = data["identification"]
-      this.code = identification["code"]
-
-      this.identification_sources = identification["sources"]
-      this.$refs.sources_table.reload()
-    })
 
     identification_available_restrictions(this.id, true, (response) => {
       const success = response["success"]
@@ -118,14 +104,7 @@ export default {
   <div class="root-container">
     <h1 class="title">识别码 {{ code }} 的提供记录</h1>
 
-    <el-card class="container">
-      <cv-table ref="sources_table" :data_source="data_source_identification_sources" :enable_search="false">
-        <el-table-column property="id" label="ID"/>
-        <el-table-column property="user.username" label="提供者"/>
-        <el-table-column property="ip" label="IP"/>
-        <el-table-column property="time" label="时间"/>
-      </cv-table>
-    </el-card>
+    <identification-source-table id="{{ id }}" code="{{ code }}" />
 
     <h4 class="subtitle">正在对该识别码生效的限制</h4>
     <el-card class="container">
