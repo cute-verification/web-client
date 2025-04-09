@@ -28,6 +28,8 @@ export default {
       return
     }
 
+    this.$refs.source_table.load(this.id)
+
     identification_available_restrictions(this.id, true, (response) => {
       const success = response["success"]
       if (!success) {
@@ -102,9 +104,7 @@ export default {
 
 <template>
   <div class="root-container">
-    <h1 class="title">识别码 {{ code }} 的提供记录</h1>
-
-    <identification-source-table id="{{ id }}" code="{{ code }}" />
+    <identification-source-table ref="source_table"/>
 
     <h4 class="subtitle">正在对该识别码生效的限制</h4>
     <el-card class="container">

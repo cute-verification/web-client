@@ -7,35 +7,30 @@ import CvTable from "./cv-table.vue";
 export default {
   name: 'identification-source-table',
   components: {CvTable},
-  props: {
-    id: {
-      type: String
-    },
-    code: {
-      type: String
-    },
-  },
   data() {
     return {
+      id: '',
+      code: '',
       sources: []
     }
   },
-  mounted() {
-    identification_info(this.id, (response) => {
-      const success = response["success"]
-      if (!success) {
-        snackbar({ message: '无法获取识别码提供记录' })
-        return
-      }
-      const data = response["data"]
-      const identification = data["identification"]
-      this.code = identification["code"]
-
-      this.sources = identification["sources"]
-      this.$refs.sources_table.reload()
-    })
-  },
   methods: {
+    load(id) {
+      this.id = id
+      identification_info(this.id, (response) => {
+        const success = response["success"]
+        if (!success) {
+          snackbar({ message: '无法获取识别码提供记录' })
+          return
+        }
+        const data = response["data"]
+        const identification = data["identification"]
+        this.code = identification["code"]
+
+        this.sources = identification["sources"]
+        this.$refs.sources_table.reload()
+      })
+    },
     data_source(target, then) {
       const datas = [];
 
